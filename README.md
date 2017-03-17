@@ -1,6 +1,6 @@
-###This is a small starter app used as base app for an angular project implementing webpack with babel
+# This is a small starter app used as base app for an angular project implementing webpack with babel
 
-##Running the code
+## Running the code
 To run the sample, open a command prompt and execute the following commands:
 
  -  npm install (to install dependencies)
