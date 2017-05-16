@@ -60,7 +60,27 @@ export default (DEBUG, PATH, PORT=3000) => ({
           ? "style!css!autoprefixer!less"
           : ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader!less-loader")
       },
-
+      {
+        test: /\.scss$/,
+        use: DEBUG ? [ {
+          loader: "style-loader"
+        }, {
+          loader: "css-loader"
+        }, {
+          loader: "sass-loader",
+          options: {
+            includePaths: [ "absolute/path/a", "absolute/path/b" ]
+          }
+        }] : extractSass.extract({
+                use: [{
+                    loader: "css-loader"
+                }, {
+                    loader: "sass-loader"
+                }],
+                // use style-loader in development
+                fallback: "style-loader"
+            })
+      },
       // Load images
       { test: /\.jpg/, loader: "url-loader?name=images/[hash][name].[ext]&limit=10000&mimetype=image/jpg" },
       { test: /\.gif/, loader: "url-loader?name=images/[hash][name].[ext]&limit=10000&mimetype=image/gif" },
@@ -98,7 +118,11 @@ export default (DEBUG, PATH, PORT=3000) => ({
         mangle: {screw_ie8: true, keep_fnames: true}
       }),
       new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.optimize.AggressiveMergingPlugin()
+      new webpack.optimize.AggressiveMergingPlugin(),
+      new ExtractTextPlugin({
+          filename: "[name].[contenthash].css",
+          disable: process.env.NODE_ENV === "development"
+      })
     ],
 
   resolveLoader: {
