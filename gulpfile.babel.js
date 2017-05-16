@@ -50,7 +50,7 @@ gulp.task('dist:index', () => {
 });
 
 // Start a livereloading development server
-gulp.task('serve:start', ['serve:static'], () => {
+gulp.task('serve:start', () => {
   const config = webpackConfig(true, 'build', PORT);
 
   return new WebpackDevServer(webpack(config), {
