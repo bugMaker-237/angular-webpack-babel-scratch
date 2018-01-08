@@ -1,8 +1,8 @@
-import './style.css';
+import './style.scss';
 
-class Page1Controller{
+class Page1Controller {
     constructor() {}
-    static getInstance(){
+    static getInstance() {
         Page1Controller.instance = new Page1Controller();
         return Page1Controller.instance;
     }

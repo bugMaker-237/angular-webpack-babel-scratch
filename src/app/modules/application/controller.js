@@ -1,9 +1,9 @@
-import './style.css';
+import './style.scss';
 
-class ApplicationController{
-    constructor(){}
+class ApplicationController {
+    constructor() {}
 
-    static getInstance(){
+    static getInstance() {
         ApplicationController.instance = new ApplicationController();
         return ApplicationController.instance;
     }

@@ -1,0 +1,50 @@
+<md-sidenav id="drawer" class="md-sidenav-left drawer" md-component-id='left' md-is-locked-open="$mdMedia('gt-sm')">
+    <div class="logo" layout="row" layout-align="start center" layout-padding>
+        <!-- <img src="images/logo-d.png" alt="" class="md-avatar" hide-gt-sm hide-gt-lg> -->
+    </div>
+    <md-content>
+        <md-list layout-align="start start">
+            <md-divider></md-divider>
+            <md-list-item ui-sref="app.home" ui-sref-active="nav-active" ng-click="null">
+                <!-- <md-icon ng-bind="'track_changes'"></md-icon> -->
+                <span>Home</span>
+            </md-list-item>
+            <md-list-item hide-xs hide-sm ui-sref="app.page1" ng-click="null">
+                <!-- <md-icon md-svg-icon="community"></md-icon> -->
+                <span>Page 1</span>
+            </md-list-item>
+            <md-list-item ui-sref="app.page2" ng-click="null">
+                <!-- <md-icon ng-bind="'people'"></md-icon> -->
+                <span>Page 2</span>
+            </md-list-item>
+            <md-list-item ui-sref="app.auth" ng-click="null">
+                <!-- <md-icon ng-bind="'location_on'"></md-icon> -->
+                <span>Profile</span>
+            </md-list-item>
+            <md-divider></md-divider>
+        </md-list>
+        <div flex class="footer" layout="column" layout-align="end start">
+            <span>
+                <b class="header">DEMO - BASEAPP</b>
+                <span>
+                    <br>
+                    <br>
+                    <span>
+                        <a href="#">Régles de confidentialités</a>
+                    </span>
+                    <br>
+                    <br>
+                    <span>
+                        <a href="#">Conditons d'utilisation</a>
+                    </span>
+                    <br>
+                    <br>
+                    <span>
+                        <a href="#">(c)2017 BugMaker</a>
+                    </span>
+                    <br>
+                    <br>
+        </div>
+    </md-content>
+
+</md-sidenav>

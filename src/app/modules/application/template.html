@@ -1,5 +1,15 @@
-<div id="application">
-    <div class="container"  layout-padding>
-        <ui-view></ui-view>
+<div id="application" layout="row" class="md-no-scroll" ng-cloak>
+    <div id="progress-loader" layout="row" layout-align="center center">
+        <md-progress-circular class="md-accent" md-mode="indeterminate" aria-label="progress">
+        </md-progress-circular>
     </div>
+    <seed-drawer hide-gt-sm hide-gt-lg></seed-drawer>
+    <div flex class="md-no-scroll">
+        <seed-toolbar></seed-toolbar>
+        <main id="main-view" flex class="container _md" layout="row" layout-padding>
+            <seed-drawer data-active="true" hide-sm hide-xs></seed-drawer>
+            <md-content ui-view flex></md-content>
+        </main>
+    </div>
+    <!-- <seed-footer></seed-footer> -->
 </div>

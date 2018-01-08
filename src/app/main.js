@@ -1,9 +1,4 @@
 import config from './config';
-import controllers from './modules/modules';
-import components from './components/components';
-import services from './services/services';
-
-
 export default angular
-    .module('app', ['ui.router', 'ngMaterial',controllers, services, components])
+    .module('app', ['ui.router', 'ngMaterial', 'app.controllers', 'app.services', 'app.components'])
     .config(config);
