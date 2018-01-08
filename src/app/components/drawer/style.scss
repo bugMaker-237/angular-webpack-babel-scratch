@@ -1,0 +1,42 @@
+#drawer {
+    height: 100%;
+    -webkit-animation-duration: 300ms;
+    animation-duration: 300ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    @media (min-width: 950px) {
+        width: 250px;
+        margin-right: 64px;
+        position: fixed;
+        margin-top: 64px;
+        .logo {
+            padding: 0px;
+        }
+        background: transparent;
+        md-content {
+            // padding-right: 48px;
+        }
+        md-content,
+        md-list {
+            background: transparent;
+        }
+    }
+    md-icon {
+        margin: inherit;
+        margin-top: 16px;
+        margin-bottom: 12px;
+        margin-right: 32px;
+    }
+    .md-avatar {
+        max-width: 144px;
+    }
+    a {
+        text-decoration: none;
+    }
+    .footer {
+        padding: 16px;
+        * {
+            font-size: 12px;
+        }
+    }
+}

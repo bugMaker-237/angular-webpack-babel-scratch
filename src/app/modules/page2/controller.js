@@ -1,13 +1,13 @@
-import './style.css';
+import './style.scss';
 
 const SCOPE = new WeakMap();
 const STATE = new WeakMap();
 const AUTH = new WeakMap();
 
-class Page2Controller{
+class Page2Controller {
     constructor() {}
 
-    static getInstance(){
+    static getInstance() {
         Page2Controller.instance = new Page2Controller();
         return Page2Controller.instance;
     }

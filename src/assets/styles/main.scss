@@ -1,0 +1,53 @@
+.no-disp {
+    -webkit-animation-name: no-disp;
+    animation-name: no-disp;
+    animation-duration: 0.3s;
+}
+
+@keyframes no-disp {
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: hidden;
+        transform: translateX(-100%);
+    }
+}
+
+.disp {
+    -webkit-animation-name: disp;
+    animation-name: disp;
+}
+
+@keyframes disp {
+    from {
+        visibility: hidden;
+        transform: translateX(-100%);
+    }
+    to {
+        visibility: visible;
+        transform: translateX(0);
+    }
+}
+
+.ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@keyframes slideContent {
+    0% {
+        -webkit-transform: translateY(15vh);
+        transform: translateY(15vh);
+        opacity: 0
+    }
+}
+
+@-webkit-keyframes slideContent {
+    0% {
+        -webkit-transform: translateY(15vh);
+        transform: translateY(15vh);
+        opacity: 0
+    }
+}

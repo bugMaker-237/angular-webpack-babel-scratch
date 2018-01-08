@@ -1,146 +1,175 @@
-import path from "path";
-import webpack from "webpack";
-import ExtractTextPlugin from "extract-text-webpack-plugin";
-import HtmlWebpackPlugin from "html-webpack-plugin";
+let path = require("path");
+let webpack = require("webpack");
+let HtmlWebpackPlugin = require("html-webpack-plugin");
+let ExtractTextPlugin = require("extract-text-webpack-plugin");
+let CleanWebpackPlugin = require("clean-webpack-plugin");
 
-export default (DEBUG, PATH, PORT=3000) => ({
-  entry: {
-    vendor : (DEBUG ? [
-        `webpack-dev-server/client?http://localhost:${PORT}`,
-      ] : []).concat([
-        
-        //vendors
-        'babel-polyfill',
-        'angular',
-        'angular-animate',
-        'angular-aria',
-        'angular-ui-router',
-        'angular-material',
-        'angular-material/angular-material.min.css',
-        //app
-        './src/assets/styles/main.css',
-        './src/app/main'
-      ]),
-      app : (DEBUG ? [
-      ] : [
-        './src/assets/styles/main.css',
-        './src/app/main'
-      ])
-  },
 
-  output: {
-    path: path.resolve(__dirname, PATH, DEBUG ? "app" : ""),
-    filename: DEBUG ? 'main.js' : 'js/[name]-[hash].js',
-    publicPath: DEBUG ? "/app/" : "./"
-  },
-
-  cache: DEBUG,
-  debug: DEBUG,
-
-  // For options, see http://webpack.github.io/docs/configuration.html#devtool
-  devtool: DEBUG && "eval",
-
-  module: {
-    loaders: [
-      // Load ES6/JSX
-      { test: /\.jsx?$/,
-        include: [
-          path.resolve(__dirname, "src"),
-        ],
-        loader: "babel-loader",
-        query: {
-          plugins: ['transform-runtime'],
-          presets: ['es2015'],
+module.exports = (DEBUG, PATH, PORT = 4900) => ({
+    entry: () => {
+        if (DEBUG === true) {
+            return {
+                vendor: [
+                    //vendors
+                    `webpack-dev-server/client?http://localhost:${PORT}`,
+                    'angular',
+                    'angular-animate',
+                    'angular-aria',
+                    'angular-ui-router',
+                    'angular-material',
+                    'angular-material/angular-material.min.css'
+                ],
+                app: [
+                    './src/assets/styles/main.scss',
+                    './src/app/services/services',
+                    './src/app/modules/modules',
+                    // './src/app/directives/directives',
+                    './src/app/components/components',
+                    './src/app/main'
+                ]
+            }
+        } else {
+            return {
+                'vendor.code': [
+                    'angular',
+                    'angular-ui-router'
+                ],
+                'vendor.design': [
+                    'angular-animate',
+                    'angular-aria',
+                    'angular-material',
+                    'angular-material/angular-material.min.css',
+                ],
+                'app.services': [
+                    './src/app/services/services'
+                ],
+                'app.components': [
+                    './src/app/components/components',
+                    // './src/app/directives/directives'
+                ],
+                'app.modules': [
+                    './src/app/modules/modules'
+                ],
+                'app.main': [
+                    './src/app/main',
+                    './src/assets/styles/main.scss'
+                ]
+            }
         }
-      },
-
-      // Load styles
-      { test: /\.css$/,
-        loader: DEBUG
-          ? "style!css!autoprefixer!less"
-          : ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader!less-loader")
-      },
-      {
-        test: /\.scss$/,
-        use: DEBUG ? [ {
-          loader: "style-loader"
-        }, {
-          loader: "css-loader"
-        }, {
-          loader: "sass-loader",
-          options: {
-            includePaths: [ "absolute/path/a", "absolute/path/b" ]
-          }
-        }] : extractSass.extract({
-                use: [{
-                    loader: "css-loader"
-                }, {
-                    loader: "sass-loader"
-                }],
-                // use style-loader in development
-                fallback: "style-loader"
-            })
-      },
-      // Load images
-      { test: /\.jpg/, loader: "url-loader?name=images/[hash][name].[ext]&limit=10000&mimetype=image/jpg" },
-      { test: /\.gif/, loader: "url-loader?name=images/[hash][name].[ext]&limit=10000&mimetype=image/gif" },
-      { test: /\.png/, loader: "url-loader?name=images/[hash][name].[ext]&limit=10000&mimetype=image/png" },
-      { test: /\.svg/, loader: "url-loader?name=images/[hash][name].[ext]&limit=10000&mimetype=image/svg" },
-      {
-          test: /\.mp4|\.mp3/,
-          loader: 'file-loader?name=media/[hash][name].[ext]'
-      },
-      // Load fonts
-      { test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?name=fonts/[hash][name].[ext]&limit=10000&mimetype=application/font-woff" },
-      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader?name=assets/[hash][name].[ext]" },
-
-      //Load html
-      {
-          test: /\.html$/,
-            loader: 'file?name=templates/[name]-[hash:6].html'
-      }
-    ]
-  },
-
-  plugins: DEBUG
-    ? [
-      new HtmlWebpackPlugin({
-        filename: 'index.html',
-        template: './src/index.html'
-      })
-    ]
-    : [
-      new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
-      new ExtractTextPlugin("style.css", {allChunks: false}),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.UglifyJsPlugin({
-        compressor: {screw_ie8: true, keep_fnames: true, warnings: false},
-        mangle: {screw_ie8: true, keep_fnames: true}
-      }),
-      new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.optimize.AggressiveMergingPlugin(),
-      new ExtractTextPlugin({
-          filename: "[name].[contenthash].css",
-          disable: process.env.NODE_ENV === "development"
-      })
-    ],
-
-  resolveLoader: {
-    root: path.join(__dirname, "node_modules"),
-  },
-
-  resolve: {
-    root: path.join(__dirname, "node_modules"),
-
-    modulesDirectories: ['node_modules'],
-
-    alias: {
-      environment: DEBUG
-        ? path.resolve(__dirname, 'config', 'environments', 'development.js')
-        : path.resolve(__dirname, 'config', 'environments', 'production.js')
     },
+    output: {
+        path: path.resolve(__dirname, PATH),
+        filename: 'js/[name].js',
+        publicPath: DEBUG ? '/' : './'
+    },
+    cache: DEBUG,
 
-    // Allow to omit extensions when requiring these files
-    extensions: ["", ".js"],
-  }
-});
+    // For options, see http://webpack.github.io/docs/configuration.html#devtool
+    devtool: DEBUG && "eval",
+    module: {
+        rules: [{
+                test: /\.(scss|css)$/,
+                use: DEBUG ? [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS
+                }, {
+                    loader: "sass-loader" // compiles Sass to CSS
+                }] : ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: ['css-loader', 'sass-loader']
+                })
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    'file-loader?name=images/[name].[ext]'
+                ]
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                use: [
+                    'file-loader?name=fonts/[name].[ext]&limit=10000&mimetype=application/font-woff'
+                ]
+            },
+            {
+                test: /\.svg/,
+                use: ["file-loader?name=svg/[name].[ext]"]
+            },
+            {
+                test: /\.mp4|\.mp3/,
+                use: ['file-loader?name=media/[name].[ext]']
+            },
+            {
+                test: /\.html$/,
+                include: [
+                    path.resolve(__dirname, "src/app"),
+                ],
+                use: ['file-loader?name=templates/[name]-[hash:6].html']
+            },
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['env'],
+                        cacheDirectory: true,
+                    }
+                }
+            }
+        ]
+    },
+    plugins: DEBUG ? [
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: './src/index.html'
+        }),
+        new webpack.HotModuleReplacementPlugin(),
+        // new webpack.ProvidePlugin({
+        //     $: "jquery",
+        //     jQuery: "jquery"
+        // })
+    ] : [
+        new CleanWebpackPlugin(['build']),
+        // new webpack.optimize.OccurrenceOrderPlugin({}),
+        new webpack.optimize.MinChunkSizePlugin({
+            minChunkSize: 25
+        }),
+        new webpack.optimize.AggressiveMergingPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: true,
+            mangle: true,
+            beautify: false,
+            comments: false,
+            fromString: true,
+            spidermonkey: true
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            minChunks: Infinity,
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: './src/index.html'
+        }),
+        new ExtractTextPlugin({
+            filename: "css/[name].css",
+            allChunks: true
+        })
+    ],
+    resolve: {
+        modules: ['node_modules', 'src'],
+
+        alias: {
+            environment: DEBUG ?
+                path.resolve(__dirname, 'config', 'environments', 'development.js') : path.resolve(__dirname, 'config', 'environments', 'production.js'),
+            _img: path.resolve(__dirname, 'src', 'assets', 'images'),
+            _svg: path.resolve(__dirname, 'src', 'assets', 'icons')
+        },
+
+        // Allow to omit extensions when requiring these files
+        extensions: [".*", ".js", ".scss", ".css"],
+    }
+
+})
