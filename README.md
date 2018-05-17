@@ -4,7 +4,7 @@
 To run the sample, open a command prompt and execute the following commands:
 
  -  npm install (to install dependencies)
- -  npm run serve (to start the server)
+ -  npm start (to start the server)
  -  Open a browser and change the URL to http://localhost:3700
 
 Hope you will understand internals of this code sample <font size="23">☺</font>. Fill free to improve the repository!

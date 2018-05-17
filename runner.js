@@ -12,20 +12,23 @@ const PORT = process.env.PORT || 3700;
 function ExecuteApp(args) {
     if (args[0] == 'debug') {
         const config = webpackConfig(true, 'dist', PORT);
-        return new WebpackDevServer(webpack(config), {
-                contentBase: 'src',
-                watchOptions: {
-                    aggregateTimeout: 100
-                },
-                stats: {
-                    colors: true
-                },
-                hot: true, // Live-reload
-                inline: true,
-                watchContentBase: true,
-                publicPath: config.output.publicPath
-            })
-            .listen(PORT, '0.0.0.0', (err) => {
+        const options = {
+            contentBase: `./dist`,
+            watchOptions: {
+                aggregateTimeout: 100
+            },
+            stats: {
+                colors: true
+            },
+            hot: true, // Live-reload
+            inline: true,
+            watchContentBase: true,
+            publicPath: config.output.publicPath,
+            host: 'localhost'
+        };
+        WebpackDevServer.addDevServerEntrypoints(config, options)
+        return new WebpackDevServer(webpack(config), options)
+            .listen(PORT, 'localhost', (err) => {
                 if (err) throw new console.error('webpack-dev-server\n ' + err);
                 console.log(`[${packageJson.name} serve]`, `Listening at http://127.0.0.1:${PORT}`);
             });
@@ -34,6 +37,18 @@ function ExecuteApp(args) {
         webpack(config, (err, stats) => {
             if (err) throw new console.error('build\n ', err);
             console.log(`[${packageJson.name} build]`, stats.toString({
+                colors: true
+            }));
+        });
+    } else if (args[0] == 'watch') {
+        let config = webpackConfig(true, 'dist', PORT);
+
+        console.log('[Watch started]');
+        webpack(config).watch({
+            aggregateTimeout: 100
+        }, (err, stats) => {
+            if (err) throw new console.error('watch\n ', err);
+            console.log(`[${packageJson.name} Watching...]`, stats.toString({
                 colors: true
             }));
         });
